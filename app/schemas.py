@@ -1,6 +1,8 @@
-from typing import Any, Optional
+from typing import Generic, List, Optional, TypeVar
 from pydantic import BaseModel
+from pydantic.generics import GenericModel
 
+T = TypeVar('T')
 
 class Feats(BaseModel):
     easy: str
@@ -8,9 +10,7 @@ class Feats(BaseModel):
     hard: str
 
 class Team(BaseModel):
-    code: int
-    name: str
-    members: List[str]
+    code: str
 
 class BaseResponse(GenericModel, Generic[T]):
     status: str = "Success"
@@ -18,5 +18,8 @@ class BaseResponse(GenericModel, Generic[T]):
 
 class EmptyResponse(BaseModel):
     status: str = "Success"
+
+class CreateTeam(BaseModel):
+    name: str
 
 

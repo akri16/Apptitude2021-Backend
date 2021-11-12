@@ -1,24 +1,22 @@
-from firebase_admin import db, auth
+from firebase_admin import db
 from fastapi import HTTPException
-import random
 from app.constants import constants
 from app.firebase.common import getUserDetails, hasEventStarted
 import time
-from .models import Team
 
 
-def checkTeamChangeAllowed():
+def checkTeamChangeAllowed(id):
     if hasEventStarted():
         raise HTTPException(status_code=403, detail=constants["EVENT_STARTED"])
 
     user = getUserDetails(id)
 
-    if user['team'] is not None:
+    if 'team' in user:
         raise HTTPException(status_code=403, detail=constants['USER_HAS_TEAM'])
 
 
 def setTeam(id, code):
-    teamRef = db.reference(f"users/{id}/team")
+    teamRef = db.reference(f"participants/{id}/team")
 
     if teamRef.get():
         raise HTTPException(status_code=403, detail=constants['USER_HAS_TEAM'])
@@ -28,31 +26,38 @@ def setTeam(id, code):
 
 def createTeam(id, name):
     teamRef = db.reference('teams')
-    snapshot = teamRef.order_by_child('name').equalTo(name).get()
+    snapshot = teamRef.order_by_child('name').equal_to(name).get()
 
-    checkTeamChangeAllowed()
+    checkTeamChangeAllowed(id)
 
     if snapshot:
         raise HTTPException(status_code=403, detail=constants['TEAM_NAME_EXISTS'])
 
-    code = time.time()
-    setTeam(code)
-    return {
-        code: teamRef.child(code).set(Team(name=name, members=[id]))
-    }
+    code = str(round(time.time()))
+    teamRef.child(code).set({"name": name, "members": [id]})
+    setTeam(id, code)
+    
+    return code
 
 
 def joinTeam(id, code):
-    checkTeamChangeAllowed()
+    checkTeamChangeAllowed(id)
 
     def __updateTeam(members):
         if len(members) == 2:
             raise HTTPException(status_code=403, detail=constants['TEAM_FULL'])
 
+        if members[0] == id:
+            raise HTTPException(status_code=403, detail=constants['OWN_TEAM'])
+
         members.append(id)
         return members
 
     ref = db.reference(f'teams/{code}/members/')
+
+    if not ref.get():
+        raise HTTPException(status_code=403, detail=constants["INVALID_CODE"])
+
     try:
         ref.transaction(__updateTeam)
         setTeam(id, code)

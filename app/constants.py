@@ -11,5 +11,7 @@ constants = {
     "USER_HAS_TEAM": "User has already joined a team",
     "TEAM_NAME_EXISTS": "Requested team name already exists",
     "TEAM_FULL": "Requested team is full",
-    "EVENT_STARTED": "Event has stated. Cannot perform the requested changes now"
+    "EVENT_STARTED": "Event has stated. Cannot perform the requested changes now",
+    "INVALID_CODE": "The entered team code is invalid",
+    "OWN_TEAM": "Cannot join your own team",
 }

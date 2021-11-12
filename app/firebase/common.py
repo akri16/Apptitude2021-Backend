@@ -1,6 +1,9 @@
+from fastapi.exceptions import HTTPException
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import db, auth
+
+from app.constants import constants
 
 
 def init():
@@ -20,7 +23,7 @@ def verify_id_token(token):
 
 
 def getUserDetails(id):
-    user = db.reference(f'users/{id}').get()
+    user = db.reference(f'participants/{id}').get()
     if user is None:
         raise HTTPException(status_code=403, detail=constants['USER_NOT_CREATED'])
 
