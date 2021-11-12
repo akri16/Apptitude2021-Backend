@@ -1,7 +1,7 @@
 from fastapi import Request, HTTPException
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from app.firebase import common
-from app import constants
+from app.constants import constants
 
 
 class FirebaseBearer(HTTPBearer):
