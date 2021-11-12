@@ -23,8 +23,8 @@ You can **Generate Random Features and assign it to your team**.
 
 You will be able to:
 
-* **Create Team** (_not implemented_).
-* **Join Team** (_not implemented_).
+* **Create Team** 
+* **Join Team** 
 
 ## Errors: 
 {__nl.join(constants.values())}
