@@ -1,31 +1,16 @@
-import firebase_admin
-from firebase_admin import credentials
 from firebase_admin import db, auth
 from fastapi import HTTPException
 import random
 from app.constants import constants
-
-
-def init():
-    cred = credentials.Certificate('app/firebase/service-account.json')
-    firebase_admin.initialize_app(cred, {
-        'databaseURL': 'https://acminternal.firebaseio.com/'
-    })
+from app.firebase.common import getUserDetails, hasEventStarted
 
 
 def __updateFeats(curentVal):
     if curentVal == None:
         return getRandomFeatures()
     else:
-        return curentVal
+        raise HTTPException(status_code=403, detail=constants["FEAT_ALREADY_GENERATED"])
 
-def verify_id_token(token):
-    try:
-        decoded_token = auth.verify_id_token(token)
-    except Exception:
-        return None
-    
-    return decoded_token
 
 def getRandomFeatures():
     feats = db.reference('features').get()
@@ -35,14 +20,11 @@ def getRandomFeatures():
 
     return feats
 
-def getUserDetails(id):
-    return db.reference(f'users/{id}').get()
 
 def setFeat(id):
     user = getUserDetails(id)
-    canGenerateStatements = db.reference('admin/allowProblemStatementGeneration').get()
 
-    if not canGenerateStatements:
+    if not hasEventStarted():
         raise HTTPException(status_code=403, detail=constants["EVENT_NOT_STARTED"])
 
     if not 'teamId' in user:

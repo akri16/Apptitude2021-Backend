@@ -1,6 +1,6 @@
 from fastapi import Request, HTTPException
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-from app.firebase import firebase
+from app.firebase import common
 from app import constants
 
 
@@ -14,7 +14,7 @@ class FirebaseBearer(HTTPBearer):
             if not credentials.scheme == "Bearer":
                 raise HTTPException(status_code=403, detail=constants["INVALID_AUTH_SCHEME"])
             
-            id = firebase.verify_id_token(credentials.credentials)
+            id = common.verify_id_token(credentials.credentials)
             if not id:
                 raise HTTPException(status_code=403, detail=constants["INVALID_AUTH_STATE"])
             return id

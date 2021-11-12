@@ -7,9 +7,16 @@ class Feats(BaseModel):
     medium: str
     hard: str
 
+class Team(BaseModel):
+    code: int
+    name: str
+    members: List[str]
 
-class FeatsResponse(BaseModel):
+class BaseResponse(GenericModel, Generic[T]):
     status: str = "Success"
-    data: Optional[Feats]
+    data: Optional[T]
+
+class EmptyResponse(BaseModel):
+    status: str = "Success"
 
 
