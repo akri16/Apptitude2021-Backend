@@ -38,6 +38,6 @@ async def joinTeam(code: int, id: str = Depends(FirebaseBearer())) -> EmptyRespo
     return EmptyResponse()
 
 
-@app.get("/loaderio-bbee6adfa96244093c1f157a930fa71f/")
+@app.get("/loaderio-bbee6adfa96244093c1f157a930fa71f/", include_in_schema=False)
 async def test():
     return FileResponse("static/loaderio-02936ad9bf9a9b15ed1ba9646d645907.txt")

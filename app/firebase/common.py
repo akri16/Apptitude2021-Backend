@@ -1,3 +1,4 @@
+import os
 from fastapi.exceptions import HTTPException
 import firebase_admin
 from firebase_admin import credentials
@@ -9,7 +10,7 @@ from app.constants import constants
 def init():
     cred = credentials.Certificate('app/firebase/service-account.json')
     firebase_admin.initialize_app(cred, {
-        'databaseURL': 'https://apptitude2021-backup-default-rtdb.asia-southeast1.firebasedatabase.app/'
+        'databaseURL': os.getenv('DATABASE_URL')
     })
 
 
