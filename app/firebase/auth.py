@@ -16,7 +16,7 @@ class FirebaseBearer(HTTPBearer):
             
             id = common.verify_id_token(credentials.credentials)
             if not id:
-                raise HTTPException(status_code=403, detail=constants["INVALID_AUTH_STATE"])
+                raise HTTPException(status_code=403, detail=constants["INVALID_AUTH_CODE"])
             return id
         else:
-            raise HTTPException(status_code=403, detail=constants["INVALID_AUTH_CODE"])
+            raise HTTPException(status_code=403, detail=constants["INVALID_AUTH_STATE"])

@@ -4,7 +4,7 @@ constants = {
     "INTERNAL_ERROR": "Internal Error",
     "FEAT_ALREADY_GENERATED": "Features already generated",
     "INVALID_STATE": "Invalid state encountered",
-    "INVALID_AUTH_STATE": "Invalid authentication scheme",
+    "INVALID_AUTH_STATE": "No auth credentials found",
     "INVALID_AUTH_CODE": "Invalid authorization code",
     "INVALID_AUTH_SCHEME": "Invalid authentication scheme",
     "USER_NOT_CREATED": "User not created yet",
