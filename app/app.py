@@ -33,7 +33,7 @@ async def createTeam(createTeam: CreateTeam, id: str = Depends(FirebaseBearer())
 
 
 @app.put("/team/{code}", tags=['team'], response_model=EmptyResponse)
-async def joinTeam(code: int) -> EmptyResponse:
+async def joinTeam(code: int, id: str = Depends(FirebaseBearer())) -> EmptyResponse:
     await run_in_threadpool(teams.joinTeam, id, code)
     return EmptyResponse()
 

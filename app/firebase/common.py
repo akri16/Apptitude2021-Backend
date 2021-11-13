@@ -9,7 +9,7 @@ from app.constants import constants
 def init():
     cred = credentials.Certificate('app/firebase/service-account.json')
     firebase_admin.initialize_app(cred, {
-        'databaseURL': 'https://acminternal.firebaseio.com/'
+        'databaseURL': 'https://apptitude2021-backup-default-rtdb.asia-southeast1.firebasedatabase.app/'
     })
 
 
