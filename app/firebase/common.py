@@ -14,16 +14,17 @@ def init():
     })
 
 
-def verify_id_token(token):
+def verify_id_token(token: str):
     try:
         decoded_token = auth.verify_id_token(token)
     except Exception:
         return None
     
-    return decoded_token
+    if decoded_token:
+        return decoded_token['uid']
 
 
-def getUserDetails(id):
+def getUserDetails(id: str):
     user = db.reference(f'participants/{id}').get()
     if user is None:
         raise HTTPException(status_code=403, detail=constants['USER_NOT_CREATED'])
@@ -32,4 +33,4 @@ def getUserDetails(id):
 
 
 def hasEventStarted():
-    return db.reference('admin/allowProblemStatementGeneration').get()
+    return db.reference('adminControl/allowProblemStatementGeneration').get()

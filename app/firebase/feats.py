@@ -21,16 +21,16 @@ def getRandomFeatures():
     return feats
 
 
-def setFeat(id):
+def setFeat(id: str):
     user = getUserDetails(id)
 
     if not hasEventStarted():
         raise HTTPException(status_code=403, detail=constants["EVENT_NOT_STARTED"])
 
-    if not 'teamId' in user:
-        return HTTPException(status_code=403, detail=constants["NO_TEAM_JOINED"])
+    if not 'team' in user:
+        raise HTTPException(status_code=403, detail=constants["NO_TEAM_JOINED"])
     
-    teamId = user['teamId']
+    teamId = user['team']
     teamRef = db.reference(f'teams/{teamId}')
     featRef = teamRef.child('features')
 
