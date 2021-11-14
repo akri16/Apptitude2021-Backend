@@ -1,6 +1,6 @@
 from firebase_admin import db
 from fastapi import HTTPException
-from app.constants import constants
+from app.constants import constants, MAX_TEAM_NAME_SIZE, MIN_TEAM_NAME_SIZE
 from app.firebase.common import getUserDetails, hasEventStarted
 import time
 
@@ -29,6 +29,10 @@ def createTeam(id, name):
     snapshot = teamRef.order_by_child('name').equal_to(name).get()
 
     checkTeamChangeAllowed(id)
+
+    name = name.strip()
+    if len(name) > MAX_TEAM_NAME_SIZE or len(name) < MIN_TEAM_NAME_SIZE:
+        raise HTTPException(status_code=400, detail=constants['INVALID_TEAM_NAME'])
 
     if snapshot:
         raise HTTPException(status_code=403, detail=constants['TEAM_NAME_EXISTS'])
