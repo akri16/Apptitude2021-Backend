@@ -38,7 +38,7 @@ def createTeam(id, name):
     if snapshot:
         raise HTTPException(status_code=403, detail=constants['TEAM_NAME_EXISTS'])
 
-    code = str(round(time.time()))
+    code = int(str(round(time.time_ns()))[3:14]) # Generate unique time based ids
     teamRef.child(code).set({"name": name, "members": [id]})
     setTeam(id, code)
     
