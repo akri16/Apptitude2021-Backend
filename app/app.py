@@ -1,9 +1,9 @@
 from fastapi import FastAPI
-from fastapi.params import Depends
+from fastapi.params import Depends, Path
 from fastapi.responses import FileResponse
 
 from .firebase.auth import FirebaseBearer
-from .firebase import feats, teams
+from .firebase import feats, teams, submission
 from .schemas import *
 from . import docs
 from starlette.concurrency import run_in_threadpool
@@ -20,13 +20,32 @@ async def root() -> dict:
     return {"message": "Hello World"}
 
 
-@app.put("/feats/generate", tags=['features'], response_model=BaseResponse[Feats]) 
+@app.get("/team/{team_path}", tags= ['team'], response_model=BaseResponse[Team], response_model_exclude_none=True)
+async def getTeam(
+    team_path: TeamPath,
+    id: str = Depends(FirebaseBearer())
+) -> BaseResponse[Team]:
+    val = await run_in_threadpool(teams.getTeam, id, team_path)
+    print(val)
+    return BaseResponse(data=Team(**{team_path: val}))
+
+
+@app.get("/team/", response_model=BaseResponse[Team], tags=['team'])
+async def getTeam(
+    id: str = Depends(FirebaseBearer())
+) -> BaseResponse[Team]:
+    val = await run_in_threadpool(teams.getTeam, id, None)
+    print(val)
+    return BaseResponse(data=Team(**val))
+
+
+@app.put("/feats/generate", status_code=201, tags=['team'], response_model=BaseResponse[Feats]) 
 async def generateFeats(id: str = Depends(FirebaseBearer())) -> BaseResponse[Feats]:
     val = await run_in_threadpool(feats.setFeat, id)
     return BaseResponse(data=val)
 
 
-@app.post("/team", tags=['team'], response_model=BaseResponse[Team])
+@app.post("/team", tags=['team'], status_code=201, response_model=BaseResponse[Team], response_model_exclude_none=True)
 async def createTeam(createTeam: CreateTeam, id: str = Depends(FirebaseBearer())) -> BaseResponse[Team]:
     code = await run_in_threadpool(teams.createTeam, id, createTeam.name)
     return BaseResponse(data=Team(code=code))
@@ -38,7 +57,14 @@ async def joinTeam(code: int, id: str = Depends(FirebaseBearer())) -> EmptyRespo
     return EmptyResponse()
 
 
+@app.put("/submit", tags=['submit'], response_model=EmptyResponse)
+async def submit(submissionBody: Submission, id: str = Depends(FirebaseBearer())) -> EmptyResponse:
+    await run_in_threadpool(submission.submit, id, submissionBody)
+    return EmptyResponse()
+
+
 @app.get("/loaderio-bbee6adfa96244093c1f157a930fa71f/", include_in_schema=False)
 async def test():
     return FileResponse("static/loaderio-02936ad9bf9a9b15ed1ba9646d645907.txt")
+
 

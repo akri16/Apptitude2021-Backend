@@ -14,7 +14,8 @@ constants = {
     "EVENT_STARTED": "Event has stated. Cannot perform the requested changes now",
     "INVALID_CODE": "The entered team code is invalid",
     "OWN_TEAM": "Cannot join your own team",
-    "INVALID_TEAM_NAME": "Team name should be between 3 and 30 characters"
+    "INVALID_TEAM_NAME": "Team name should be between 3 and 30 characters",
+    "SUBMISSION_NOT_ALLOWED": "Submission is not allowed now",
 }
 
 MAX_TEAM_NAME_SIZE = 30

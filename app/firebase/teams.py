@@ -3,6 +3,7 @@ from fastapi import HTTPException
 from app.constants import constants, MAX_TEAM_NAME_SIZE, MIN_TEAM_NAME_SIZE
 from app.firebase.common import getUserDetails, hasEventStarted
 import time
+from app.schemas import TeamPath
 
 
 def checkTeamChangeAllowed(id):
@@ -60,7 +61,7 @@ def joinTeam(id, code):
     ref = db.reference(f'teams/{code}/members/')
 
     if not ref.get():
-        raise HTTPException(status_code=403, detail=constants["INVALID_CODE"])
+        raise HTTPException(status_code=404, detail=constants["INVALID_CODE"])
 
     try:
         ref.transaction(__updateTeam)
@@ -69,4 +70,35 @@ def joinTeam(id, code):
         raise HTTPException(status_code=500, detail=constants["INTERNAL_ERROR"])
 
 
-    
+def getMembers(code=None, members=None):
+    if not members: 
+        members = db.reference(f'teams/{code}/members').get()
+    l = []
+    for x in members:
+        l.append(db.reference(f'participants/{x}').get())
+    return l
+
+def getTeam(id: str, teamPath: TeamPath):
+    user = getUserDetails(id)
+
+    if 'team' not in user:
+        raise HTTPException(status_code=403, detail=constants["NO_TEAM_JOINED"])
+
+    code = user['team']
+
+    if teamPath:
+        if teamPath == teamPath.code:
+            return code
+
+        if teamPath == teamPath.members:  
+            return getMembers(code=code)
+
+        return db.reference(f'teams/{code}/{teamPath}').get()
+
+    val = db.reference(f'teams/{code}/').get()
+    val['code'] = code
+    val['members'] = getMembers(members=val['members'])
+    return val
+
+
+
