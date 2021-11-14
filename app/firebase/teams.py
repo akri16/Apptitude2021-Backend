@@ -26,12 +26,12 @@ def setTeam(id, code):
 
 
 def createTeam(id, name):
+    name = name.strip()
     teamRef = db.reference('teams')
     snapshot = teamRef.order_by_child('name').equal_to(name).get()
 
     checkTeamChangeAllowed(id)
 
-    name = name.strip()
     if len(name) > MAX_TEAM_NAME_SIZE or len(name) < MIN_TEAM_NAME_SIZE:
         raise HTTPException(status_code=400, detail=constants['INVALID_TEAM_NAME'])
 
