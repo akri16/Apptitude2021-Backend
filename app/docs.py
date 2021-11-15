@@ -2,7 +2,7 @@ from app.constants import constants
 
 
 title = "Apptitude 2021"
-version="0.0.1"
+version="1.0.0"
 
 __nl = "<br>"
 
@@ -25,6 +25,11 @@ You will be able to:
 
 * **Create Team** 
 * **Join Team** 
+* Get any team paths
+
+## Submit
+
+You can submit the github and video links
 
 ## Errors: 
 {__nl.join(constants.values())}
