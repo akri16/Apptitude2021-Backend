@@ -22,8 +22,6 @@ def createTeam(id, name):
     teamRef = db.reference('teams')
     snapshot = teamRef.order_by_child('name').equal_to(name).get()
 
-    checkTeamChangeAllowed()
-
     user = getUserDetails(id)
     if 'team' in user:
         raise HTTPException(status_code=403, detail=constants['USER_HAS_TEAM'])
