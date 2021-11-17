@@ -13,7 +13,6 @@ def checkTeamChangeAllowed():
 
 def setTeam(id, code):
     teamRef = db.reference(f"participants/{id}/team")
-
     return teamRef.set(code)
 
 
@@ -33,8 +32,8 @@ def createTeam(id, name):
     if snapshot:
         raise HTTPException(status_code=403, detail=constants['TEAM_NAME_EXISTS'])
 
-    code = str(round(time.time_ns()))[3:14] # Generate unique time based ids
-    teamRef.child(code).set({"name": name, "members": [id]})
+    code = int(str(round(time.time_ns()))[3:14]) # Generate unique time based ids
+    teamRef.child(str(code)).set({"name": name, "members": [id]})
     setTeam(id, code)
     
     return code
@@ -52,8 +51,6 @@ def joinTeam(id, code):
     if 'team' in user and __getTeamSize(user['team']) == 2:
         raise HTTPException(status_code=403, detail=constants['USER_HAS_TEAM'])
 
-    if 'team' in user:
-        db.reference(f"teams/{user['team']}").delete()
 
     def __updateTeam(members):
         if len(members) == 2:
@@ -67,6 +64,8 @@ def joinTeam(id, code):
 
     try:
         ref.transaction(__updateTeam)
+        if 'team' in user:
+            db.reference(f"teams/{user['team']}").delete()
         setTeam(id, code)
     except db.TransactionAbortedError:
         raise HTTPException(status_code=500, detail=constants["INTERNAL_ERROR"])
