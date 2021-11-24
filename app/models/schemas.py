@@ -10,6 +10,11 @@ class Feats(BaseModel):
     medium: str
     hard: str
 
+class CreateUser(BaseModel):
+    name: str = Field(
+        None, max_length=30, min_length=3
+    )
+    phoneNo: str
 
 class GenerateFeatResponse(BaseModel):
     features: Feats

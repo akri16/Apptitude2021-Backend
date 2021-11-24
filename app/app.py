@@ -1,9 +1,9 @@
 from fastapi import FastAPI
-from fastapi.params import Depends
+from fastapi.params import Body, Depends
 from fastapi.responses import FileResponse
 
 from .firebase.auth import FirebaseBearer
-from .firebase import feats, teams, submission
+from .firebase import feats, teams, submission, user
 from .models.schemas import *
 import docs
 from starlette.concurrency import run_in_threadpool
@@ -20,7 +20,13 @@ async def root() -> dict:
     return {"message": "Hello World"}
 
 
-@app.get("/team/{team_path}", tags= ['team'], response_model=BaseResponse[Team], response_model_exclude_none=True)
+@app.post("/participant", tags=['user'])
+async def createUser(newUser: CreateUser, id: str = Depends(FirebaseBearer())) -> BaseResponse[User]:
+    val: User = await run_in_threadpool(user.createUser, id, newUser)
+    return BaseResponse(data=val)
+
+
+@app.get("/team/{team_path}", tags=['team'], response_model=BaseResponse[Team], response_model_exclude_none=True)
 async def getTeam(
     team_path: TeamPath,
     id: str = Depends(FirebaseBearer())

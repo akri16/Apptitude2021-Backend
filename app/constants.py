@@ -1,4 +1,7 @@
 constants = {
+    "NO_PHNO_FOUND": "No verified phone number was found",
+    "USER_ALREADY_EXISTS": "User can't be created. This user already exists",
+    "NO_EMAIL_FOUND": "No verified email is associated with this user.A verified  Email is required to register",
     "EVENT_NOT_STARTED": "Event not started yet. Try again after the event starts",
     "FEAT_CANNOT_BE_GENERATED": "Feature generation is not allowed now",
     "NO_TEAM_JOINED": "No team available. Join a team first",
