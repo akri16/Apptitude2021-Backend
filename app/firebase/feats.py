@@ -1,16 +1,19 @@
 from firebase_admin import db, auth
 from fastapi import HTTPException
 import random
-from app.constants import constants
-from app.firebase.common import getUserDetails, hasEventStarted
+from ..constants import constants
+from ..firebase.common import getUserDetails, isProblemStatementGenerationAllowed
+from ..models.schemas import Feats, GenerateFeatResponse, Team
 
 
-def __updateFeats(curentVal):
-    if curentVal == None:
-        return getRandomFeatures()
-    else:
-        raise HTTPException(status_code=403, detail=constants["FEAT_ALREADY_GENERATED"])
+def __updateFeatCnt(curentVal: int):
+    if not curentVal:
+        return 1
+    
+    if curentVal < 3:
+        return curentVal + 1
 
+    raise HTTPException(status_code=403, detail=constants["FEAT_ALREADY_GENERATED"])
 
 def getRandomFeatures():
     feats = db.reference('features').get()
@@ -21,33 +24,26 @@ def getRandomFeatures():
     return feats
 
 
-def setFeat(id: str):
+def setFeat(id: str) -> Team:
     user = getUserDetails(id)
 
-    if not hasEventStarted():
-        raise HTTPException(status_code=403, detail=constants["EVENT_NOT_STARTED"])
+    if not isProblemStatementGenerationAllowed():
+        raise HTTPException(status_code=403, detail=constants["FEAT"])
 
     if not 'team' in user:
         raise HTTPException(status_code=403, detail=constants["NO_TEAM_JOINED"])
     
     teamId = user['team']
-    teamRef = db.reference(f'teams/{teamId}')
-    featRef = teamRef.child('features')
+    featGenCntRef = db.reference(f'teams/{teamId}/featGenCnt')
+    featRef = db.reference(f'teams/{teamId}/features')
 
-    team = teamRef.get()
-    if team != None and 'features' not in team:
-        try:
-            return featRef.transaction(__updateFeats)
-        except db.TransactionAbortedError:
-            raise HTTPException(status_code=500, detail=constants["INTERNAL_ERROR"])
+    try:
+        cnt: int = featGenCntRef.transaction(__updateFeatCnt)
+        feats = getRandomFeatures()
+        featRef.set(feats)
+        return GenerateFeatResponse(features=Feats(**feats), featGenCnt=cnt)
 
-    if 'features' in team:
-        raise HTTPException(status_code=403, detail=constants["FEAT_ALREADY_GENERATED"])
-
-    if team == None:
-        raise HTTPException(status_code=500, detail=constants["INVALID_STATE"]) 
-
-    return None
-
+    except db.TransactionAbortedError:
+        raise HTTPException(status_code=500, detail=constants["INTERNAL_ERROR"])
 
 

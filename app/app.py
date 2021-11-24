@@ -1,11 +1,11 @@
 from fastapi import FastAPI
-from fastapi.params import Depends, Path
+from fastapi.params import Depends
 from fastapi.responses import FileResponse
 
 from .firebase.auth import FirebaseBearer
 from .firebase import feats, teams, submission
-from .schemas import *
-from . import docs
+from .models.schemas import *
+import docs
 from starlette.concurrency import run_in_threadpool
 
 
@@ -39,8 +39,8 @@ async def getTeam(
     return BaseResponse(data=Team(**val))
 
 
-@app.put("/feats/generate", status_code=201, tags=['team'], response_model=BaseResponse[Feats]) 
-async def generateFeats(id: str = Depends(FirebaseBearer())) -> BaseResponse[Feats]:
+@app.put("/feats/generate", status_code=201, tags=['team'], response_model=BaseResponse[GenerateFeatResponse]) 
+async def generateFeats(id: str = Depends(FirebaseBearer())) -> BaseResponse[GenerateFeatResponse]:
     val = await run_in_threadpool(feats.setFeat, id)
     return BaseResponse(data=val)
 
@@ -66,5 +66,4 @@ async def submit(submissionBody: Submission, id: str = Depends(FirebaseBearer())
 @app.get("/loaderio-bbee6adfa96244093c1f157a930fa71f/", include_in_schema=False)
 async def test():
     return FileResponse("static/loaderio-02936ad9bf9a9b15ed1ba9646d645907.txt")
-
 

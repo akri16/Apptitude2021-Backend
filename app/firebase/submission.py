@@ -1,8 +1,8 @@
-from app.firebase.common import getUserDetails, hasEventStarted
+from .common import getUserDetails
 from firebase_admin import db
 from fastapi import HTTPException
-from app.constants import constants
-from app.schemas import Submission
+from ..constants import constants
+from ..models.schemas import Submission
 
 def submit(id: str, submission: Submission):
     user = getUserDetails(id)

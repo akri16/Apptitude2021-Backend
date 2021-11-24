@@ -11,6 +11,11 @@ class Feats(BaseModel):
     hard: str
 
 
+class GenerateFeatResponse(BaseModel):
+    features: Feats
+    featGenCnt: int
+
+
 class User(BaseModel):
     name: str
     emailId: str
@@ -35,6 +40,7 @@ class Team(BaseModel):
     members: Optional[List[User]]
     features: Optional[Feats]
     submission: Optional[Submission]
+    featGenCnt: Optional[int]
 
 
 class BaseResponse(GenericModel, Generic[T]):
@@ -55,6 +61,7 @@ class TeamPath(str, Enum):
     submission = "submission"
     name = "name"
     code = "code"
+    featGenCnt = "featGenCnt"
 
 
 

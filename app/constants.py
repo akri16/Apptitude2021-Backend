@@ -1,8 +1,9 @@
 constants = {
     "EVENT_NOT_STARTED": "Event not started yet. Try again after the event starts",
+    "FEAT_CANNOT_BE_GENERATED": "Feature generation is not allowed now",
     "NO_TEAM_JOINED": "No team available. Join a team first",
     "INTERNAL_ERROR": "Internal Error",
-    "FEAT_ALREADY_GENERATED": "Features already generated",
+    "FEAT_ALREADY_GENERATED": "Features already generated 3 times. No more attempts left",
     "INVALID_STATE": "Invalid state encountered",
     "INVALID_AUTH_STATE": "No auth credentials found",
     "INVALID_AUTH_CODE": "Invalid authorization code",
@@ -20,3 +21,4 @@ constants = {
 
 MAX_TEAM_NAME_SIZE = 30
 MIN_TEAM_NAME_SIZE = 3
+PROBLEM_STMT_MAX_TIME_AFTER_START = 6 * 60 * 60

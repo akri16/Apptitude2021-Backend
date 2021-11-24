@@ -1,9 +1,9 @@
 from firebase_admin import db
 from fastapi import HTTPException
-from app.constants import constants, MAX_TEAM_NAME_SIZE, MIN_TEAM_NAME_SIZE
-from app.firebase.common import getUserDetails, hasEventStarted
+from ..constants import constants, MAX_TEAM_NAME_SIZE, MIN_TEAM_NAME_SIZE
+from .common import getUserDetails, hasEventStarted
 import time
-from app.schemas import TeamPath
+from ..models.schemas import TeamPath
 
 
 def checkTeamChangeAllowed():

@@ -1,10 +1,10 @@
-import os
+import os, time
 from fastapi.exceptions import HTTPException
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import db, auth
 
-from app.constants import constants
+from ..constants import constants, PROBLEM_STMT_MAX_TIME_AFTER_START
 
 
 def init():
@@ -32,5 +32,9 @@ def getUserDetails(id: str):
     return user
 
 
-def hasEventStarted():
-    return db.reference('adminControl/allowProblemStatementGeneration').get()
+def isProblemStatementGenerationAllowed() -> bool:
+    return 0 <= (time.time() - db.reference('adminControl/eventStartTime').get()) < PROBLEM_STMT_MAX_TIME_AFTER_START
+
+def hasEventStarted() -> bool:
+    return time.time() >= db.reference('adminControl/eventStartTime').get()
+
