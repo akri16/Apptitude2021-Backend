@@ -2,6 +2,7 @@ from typing import Any
 from fastapi import FastAPI
 from fastapi.params import Body, Depends
 from fastapi.responses import FileResponse
+from sentry_sdk.integrations.asgi import SentryAsgiMiddleware
 
 from .firebase.auth import FirebaseBearer
 from .firebase import feats, teams, submission, user, common, static
@@ -17,6 +18,8 @@ app = FastAPI(
     version=docs.version
 )
 
+app.add_middleware(SentryAsgiMiddleware)
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -24,7 +27,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
 
 @app.get("/")
 async def root() -> dict:
@@ -46,7 +48,6 @@ async def getUser(id: str = Depends(FirebaseBearer())) -> BaseResponse[User]:
 @app.get("/{static_path}", tags=['static'], response_model=BaseResponse[Any])
 async def getStatic(static_path: StaticPath) -> BaseResponse[Any]:
     val = static.getStatic(static_path)
-    print(val)
     return BaseResponse(data=val)
 
 
@@ -56,7 +57,6 @@ async def getTeam(
     id: str = Depends(FirebaseBearer())
 ) -> BaseResponse[Team]:
     val = await run_in_threadpool(teams.getTeam, id, team_path)
-    print(val)
     return BaseResponse(data=Team(**{team_path: val}))
 
 
@@ -65,7 +65,6 @@ async def getTeam(
     id: str = Depends(FirebaseBearer())
 ) -> BaseResponse[Team]:
     val = await run_in_threadpool(teams.getTeam, id, None)
-    print(val)
     return BaseResponse(data=Team(**val))
 
 
