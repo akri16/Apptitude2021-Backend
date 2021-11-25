@@ -7,6 +7,7 @@ from .firebase import feats, teams, submission, user
 from .models.schemas import *
 import docs
 from starlette.concurrency import run_in_threadpool
+from fastapi.middleware.cors import CORSMiddleware
 
 
 app = FastAPI(
@@ -14,6 +15,15 @@ app = FastAPI(
     description=docs.description,
     version=docs.version
 )
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 @app.get("/")
 async def root() -> dict:
