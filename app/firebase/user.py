@@ -1,5 +1,4 @@
 from fastapi.exceptions import HTTPException
-from .common import getUserDetails
 from ..constants import constants
 from ..models.schemas import CreateUser, User
 from firebase_admin import auth, db

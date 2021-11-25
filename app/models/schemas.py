@@ -69,4 +69,7 @@ class TeamPath(str, Enum):
     featGenCnt = "featGenCnt"
 
 
-
+class StaticPath(str, Enum):
+    sponsors = "sponsors"
+    timeline = "timeline"
+    problemStatements = "problemStatements" 

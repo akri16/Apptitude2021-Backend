@@ -1,9 +1,10 @@
+from typing import Any
 from fastapi import FastAPI
 from fastapi.params import Body, Depends
 from fastapi.responses import FileResponse
 
 from .firebase.auth import FirebaseBearer
-from .firebase import feats, teams, submission, user
+from .firebase import feats, teams, submission, user, common, static
 from .models.schemas import *
 import docs
 from starlette.concurrency import run_in_threadpool
@@ -33,6 +34,19 @@ async def root() -> dict:
 @app.post("/participant", tags=['user'])
 async def createUser(newUser: CreateUser, id: str = Depends(FirebaseBearer())) -> BaseResponse[User]:
     val: User = await run_in_threadpool(user.createUser, id, newUser)
+    return BaseResponse(data=val)
+
+
+@app.get("/participant", tags=['user'])
+async def getUser(id: str = Depends(FirebaseBearer())) -> BaseResponse[User]:
+    val: User = await run_in_threadpool(common.getUserDetails, id)
+    return BaseResponse(data=val)
+
+
+@app.get("/{static_path}", tags=['static'], response_model=BaseResponse[Any])
+async def getStatic(static_path: StaticPath) -> BaseResponse[Any]:
+    val = static.getStatic(static_path)
+    print(val)
     return BaseResponse(data=val)
 
 
