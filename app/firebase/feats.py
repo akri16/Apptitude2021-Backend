@@ -28,7 +28,7 @@ def setFeat(id: str) -> Team:
     user = getUserDetails(id)
 
     if not isProblemStatementGenerationAllowed():
-        raise HTTPException(status_code=403, detail=constants["FEAT"])
+        raise HTTPException(status_code=403, detail=constants["FEAT_CANNOT_BE_GENERATED"])
 
     if not 'team' in user:
         raise HTTPException(status_code=403, detail=constants["NO_TEAM_JOINED"])
