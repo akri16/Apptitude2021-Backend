@@ -21,7 +21,8 @@ app = FastAPI(
 app.add_middleware(SentryAsgiMiddleware)
 
 
-origins = ["https://apptitude-pwa.vercel.app/", "https://apptitude.acmvit.in/"]
+origins = ["*"]
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
