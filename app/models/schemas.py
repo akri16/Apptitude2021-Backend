@@ -11,9 +11,7 @@ class Feats(BaseModel):
     hard: str
 
 class CreateUser(BaseModel):
-    name: str = Field(
-        None, max_length=30, min_length=3
-    )
+    name: str = Field(max_length=30, min_length=3)
     phoneNo: str
 
 class GenerateFeatResponse(BaseModel):
@@ -61,9 +59,7 @@ class EmptyResponse(BaseModel):
     status: str = "Success"
 
 class CreateTeam(BaseModel):
-    name: str = Field(
-        None, max_length=30, min_length=3
-    )
+    name: str = Field(max_length=30, min_length=3)
 
 class TeamPath(str, Enum):
     members = "members"
