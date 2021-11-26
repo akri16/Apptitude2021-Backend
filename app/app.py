@@ -33,17 +33,20 @@ async def root() -> dict:
     return {"message": "Hello World"}
 
 
-@app.post("/participant", tags=['user'])
+@app.post("/participant", tags=['user'], response_model=BaseResponse[User])
 async def createUser(newUser: CreateUser, id: str = Depends(FirebaseBearer())) -> BaseResponse[User]:
     val: User = await run_in_threadpool(user.createUser, id, newUser)
     return BaseResponse(data=val)
 
-
-@app.get("/participant", tags=['user'])
+@app.get("/participant", tags=['user'], response_model=BaseResponse[User])
 async def getUser(id: str = Depends(FirebaseBearer())) -> BaseResponse[User]:
     val: User = await run_in_threadpool(common.getUserDetails, id)
     return BaseResponse(data=val)
 
+@app.get("/participants/status", tags=['user'], response_model=BaseResponse[UserStatus])
+async def getUserStatus(id: str = Depends(FirebaseBearer())) -> BaseResponse[UserStatus]:
+    val: UserStatus = await run_in_threadpool(user.getUserStatus, id)
+    return BaseResponse(data=val)
 
 @app.get("/{static_path}", tags=['static'], response_model=BaseResponse[Any])
 async def getStatic(static_path: StaticPath) -> BaseResponse[Any]:
@@ -91,6 +94,11 @@ async def submit(submissionBody: Submission, id: str = Depends(FirebaseBearer())
     await run_in_threadpool(submission.submit, id, submissionBody)
     return EmptyResponse()
 
+
+@app.get("/control/{control_path}", tags=['control'], response_model=BaseResponse[Any])
+async def getControlPath(control_path: ControlPath) -> BaseResponse[Any]:
+    val = await run_in_threadpool(common.getControlPath, control_path)
+    return BaseResponse(data=val)
 
 @app.get("/loaderio-bbee6adfa96244093c1f157a930fa71f/", include_in_schema=False)
 async def test():

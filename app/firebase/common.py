@@ -4,6 +4,8 @@ import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import db, auth
 
+from app.models.schemas import ControlPath
+
 from ..constants import constants, PROBLEM_STMT_MAX_TIME_AFTER_START
 
 
@@ -38,3 +40,6 @@ def isProblemStatementGenerationAllowed() -> bool:
 def hasEventStarted() -> bool:
     return time.time() >= db.reference('adminControl/eventStartTime').get()
 
+
+def getControlPath(path: ControlPath):
+    return db.reference(f"adminControl/{path}").get()

@@ -1,6 +1,6 @@
 from fastapi.exceptions import HTTPException
 from ..constants import constants
-from ..models.schemas import CreateUser, User
+from ..models.schemas import CreateUser, User, UserStatus
 from firebase_admin import auth, db
 
 
@@ -29,3 +29,15 @@ def createUser(id: str, createUser: CreateUser) -> User:
 
     return newUser
 
+
+def getUserStatus(id: str) -> UserStatus:
+    userRef = db.reference(f'participants/{id}')
+    user = userRef.get()
+
+    if user == None: 
+        return UserStatus(isCreated=False, hasTeam=False)
+
+    if 'team' in user:
+        return UserStatus(isCreated=True, hasTeam=True)
+
+    return UserStatus(isCreated=True, hasTeam=False)

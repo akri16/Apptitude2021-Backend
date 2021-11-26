@@ -28,6 +28,11 @@ class User(BaseModel):
     team: Optional[int] = None
 
 
+class UserStatus(BaseModel):
+    isCreated: bool
+    hasTeam: bool
+
+
 class Submission(BaseModel):
     github: HttpUrl
     video: Optional[HttpUrl]
@@ -73,3 +78,8 @@ class StaticPath(str, Enum):
     sponsors = "sponsors"
     timeline = "timeline"
     problemStatements = "problemStatements" 
+
+
+class ControlPath(str, Enum):
+    allowSubmission = "allowSubmission"
+    eventStartTime = "eventStartTime"
