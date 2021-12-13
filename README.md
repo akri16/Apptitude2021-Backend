@@ -1,8 +1,9 @@
 # Apptitude2021 Backend
 
-[![](https://img.shields.io/badge/Documentation-see%20docs-green?style=flat-square&logo=appveyor)](http://apptitude2021.herokuapp.com/docs)
+[![](https://img.shields.io/badge/Documentation-see%20docs-green?logo=appveyor)](http://apptitude2021.herokuapp.com/docs) &nbsp; &nbsp;
+[![](https://img.shields.io/badge/api-root-orange)](http://apptitude2021.herokuapp.com/)
 
-![](https://github.com/akri16/Apptitude2021-Backend/blob/master/assets/docs.PNG)
+![](https://github.com/akri16/Apptitude2021-Backend/blob/main/assets/docs.PNG)
 
 ## Project Structure
     .
@@ -35,35 +36,82 @@
 
 ## Running the Project
 1. Clone the Project with:
-```sh
-git clone https://github.com/akri16/Apptitude2021-Backend
-```
 
-2. Set the [Environmental Variables](#Environmental--Variables)
+        git clone https://github.com/akri16/Apptitude2021-Backend
+2. Set the [Environmental Variables](#environmental-variables)
 
 3. Run
     1. Run with __python3__
         1. Install the Dependencies 
-        ```sh
-        pip install -r requirements.txt
-        ```
-
+        
+                pip install -r requirements.txt
+        
         2. Run with *python3* 
-        ```sh
-        python3 main.py 
-        ```
+      
+                python3 main.py 
+        
         3. Go to [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs) <br/><br/>
     2. Run with __Docker__ 
         1. Build the image 
-            ```sh
-            docker build -t apptitude-image .
-            ```
+            
+                docker build -t apptitude-image .
+            
         2. Run the image
-            ```sh
-            docker run -d --name mycontainer -p 80:80 apptitude-image
-            ```
+            
+                docker run -d --name mycontainer -p 80:80 apptitude-image
+            
         3. Go to [http://127.0.0.1/docs](http://127.0.0.1/docs)
 
+
+## Database Schema
+
+```json
+{
+  "adminControl" : {
+    "allowSubmission" : false,
+    "discordLink" : "-",
+    "eventStartTime" : 1637940600
+  },
+  "admins" : {
+    "+918921816808" : {
+      "level" : 2,
+      "login" : "1595330145",
+      "name" : "Amit Krishna",
+      "phone" : "+918921816808"
+    }
+  },
+  "features" : {
+    "easy" : [ "abc"],
+    "hard" : [ "def"],
+    "medium" : [ "ghi"]
+  },
+  "participants" : {
+    "0fy2NZRWv3cRcNVoSb1kLHVahxr2" : {
+      "emailId" : "xyz@gmail.com",
+      "name" : "John Martin",
+      "phoneNo" : "+918455986398",
+      "team" : 79441271637
+    }
+  },
+  "sponsors" : [{
+    "link" : "https://firebasestorage.googleapis.com/v0/b/app-hackathon-d1655.appspot.com/o/cb_new.png",
+    "website" : "https://xyz.com/"
+  }],
+  "teams" : {
+    "79425983493" : {
+      "featGenCnt" : 3,
+      "features" : {
+        "easy" : "abc",
+        "hard" : "def",
+        "medium" : "ghi"
+      },
+      "members" : [ "Xot1V6pKm0OS7X49CDGZDc9tXKO2", "OdbtrnX5i7c9VJT56KKI8EzWeVh2" ],
+      "name" : "xyz"
+    }
+  }
+}
+
+```
 
 ## Authentication
 - Uses Bearer Authentication
